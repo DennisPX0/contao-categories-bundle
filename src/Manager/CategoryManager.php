@@ -380,6 +380,7 @@ class CategoryManager
         }
 
         foreach ($categories as $category) {
+            /** @var CategoryAssociationModel $association */
             $association = $this->framework->createInstance(CategoryAssociationModel::class);
             $association->tstamp = time();
             $association->category = $category;
@@ -418,9 +419,14 @@ class CategoryManager
         return $result;
     }
 
-    public function findAssociationsByParentTableAndCategory(int $categoryId, string $parentTable)
+    /**
+     * @param int $categoryId
+     * @param string $parentTable
+     * @return CategoryAssociationModel[]|Collection|null
+     */
+    public function findAssociationsByParentTableAndCategory(int $categoryId, string $parentTable): ?Collection
     {
-        return System::getContainer()->get('huh.utils.model')->findModelInstancesBy('tl_category_association', ['category=?', 'parentTable=?'], [$categoryId, $parentTable]);
+        return CategoryAssociationModel::findBy(['category=?', 'parentTable=?'], [$categoryId, $parentTable]);
     }
 
     public function findAssociationsByParentTableAndEntityAndField(string $parentTable, int $entityId, string $field)
